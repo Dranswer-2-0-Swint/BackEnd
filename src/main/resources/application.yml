@@ -1,0 +1,80 @@
+server:
+  port: 8888
+  ssl:
+    enabled: false
+    key-store-type: PKCS12
+    key-store-password: ttt333qqq#1
+    protocol: TLS
+    enabled-protocols: TLSv1.2
+    key-store: spring_key.p12
+  tomcat:
+    threads:
+      max: 1000 # 생성할 수 있는 thread의 총 개수
+      min-spare: 250 # 항상 활성화 되어있는(idle) thread의 개수
+    max-connections: 8192 # 수립가능한 connection의 총 개수
+    accept-count: 250 # 작업큐의 사이즈
+    connection-timeout: 20000 # timeout 판단 기준 시간, 20초
+
+spring:
+  application:
+    name: dranswer
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:223.130.175.66}:${DB_PORT:32233}/${DB_NAME:svc_plf}?currentSchema=${DB_SCHEMA:swint} #공공존 개발계 db
+    username: ${DB_USER:swint}
+    password: ${DB_PASS:ttt333qqq#1}
+    hikari:
+      maximum-pool-size: 10
+  jpa:
+    properties:
+      hibernate:
+        default_catalog: svc_plf
+        default_schema: swint
+        hbm2ddl:
+          auto: none
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+springdoc:
+  swagger-ui:
+    groups-order: DESC
+    tags-sorter: alpha
+    operations-sorter: method
+    disable-swagger-default-url: true
+    display-request-duration: true
+    defaultModelsExpandDepth: 2
+    defaultModelExpandDepth: 2
+  api-docs:
+    path: /api-docs
+  show-actuator: true
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  writer-with-default-pretty-printer: true
+  model-and-view-allowed: true
+  paths-to-match:
+    - /**
+
+mybatis:
+  type-aliases-package: com.t3q.dranswer.dto
+
+env:
+  authUrl: ${AUTH_HOST:https://auth-dev.dranswer-g.co.kr}
+
+  userRealm: ${USER_REALM:service-user-dev}
+  userClient: ${USER_CLIENT:swint}
+  userSecret: ${USER_SECRET:Vvw2Obuuqa4nlAz5cctSBK5kb1jONReP}
+  userAuthUrl: ${env.authUrl}/realms/${env.userRealm}/protocol/openid-connect
+  userTokenUrl: ${env.authUrl}/realms/${env.userRealm}/protocol/openid-connect/token
+  userSpecUrl: ${env.authUrl}/realms/${env.userRealm}/protocol/openid-connect/token/introspect
+
+  systemRealm: ${SYSTEM_REALM:service-system-dev}
+  systemClient: ${SYSTEM_CLIENT:swint}
+  systemSecret: ${SYSTEM_SECRET:K91G3XhKY3z2qussprBEAC24cksv0qNk}
+  systemAuthUrl: ${env.authUrl}/realms/${env.systemRealm}/protocol/openid-connect/auth
+  systemTokenUrl: ${env.authUrl}/realms/${env.systemRealm}/protocol/openid-connect/token
+  systemSpecUrl: ${env.authUrl}/realms/${env.systemRealm}/protocol/openid-connect/token/introspect
+
+  cmanUrl: ${CMAN_HOST:http://223.130.175.66:30330}
+  callbackUrl: ${LOCAL_HOST:http://localhost:8888/callback}
+
+  accessTokenName: dr_access_token
+  refreshTokenName: dr_refresh_token

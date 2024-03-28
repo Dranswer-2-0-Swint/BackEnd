@@ -1,0 +1,69 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.1.10'
+    id 'io.spring.dependency-management' version '1.1.4'
+    id 'org.asciidoctor.jvm.convert' version '3.3.2'
+}
+
+group = 'com.t3q'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    sourceCompatibility = '17'
+}
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    set('snippetsDir', file("build/generated-snippets"))
+}
+
+dependencies {
+    /*spring-boot*/
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    runtimeOnly 'org.postgresql:postgresql'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+
+    /* reactor */
+    implementation platform('io.projectreactor:reactor-bom:2022.0.3')
+    implementation 'io.projectreactor:reactor-core:3.6.2'
+    implementation 'io.projectreactor:reactor-test:3.6.2'
+
+    //lombok
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.30'
+    annotationProcessor('org.projectlombok:lombok')
+    testImplementation 'org.projectlombok:lombok:1.18.28'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:2.7.6'
+
+
+    //WebFlux
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+    //스프링 독스 swagger
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+
+    // keycloak
+    implementation group: 'org.keycloak', name: 'keycloak-adapter-core', version: '22.0.5'
+    implementation group: 'org.keycloak', name: 'keycloak-core', version: '20.0.5'
+    implementation group: 'org.keycloak', name: 'keycloak-admin-client', version: '20.0.5'
+    compileOnly group: 'org.keycloak', name: 'keycloak-services', version: '20.0.5'
+}
+
+tasks.named('bootBuildImage') {
+    builder = 'paketobuildpacks/builder-jammy-base:latest'
+}
+
+tasks.named('test') {
+    outputs.dir snippetsDir
+    useJUnitPlatform()
+}
+
+tasks.named('asciidoctor') {
+    inputs.dir snippetsDir
+    dependsOn test
+}
