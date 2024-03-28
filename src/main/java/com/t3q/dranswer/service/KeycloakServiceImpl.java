@@ -1,4 +1,4 @@
-package com.t3q.dranswer.service.serviceImpl;
+package com.t3q.dranswer.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.t3q.dranswer.dto.keycloak.KeycloakTokenIntrospectReq;

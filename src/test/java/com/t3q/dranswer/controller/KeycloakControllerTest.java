@@ -3,7 +3,7 @@ package com.t3q.dranswer.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.t3q.dranswer.dto.keycloak.KeycloakTokenIntrospectReq;
-import com.t3q.dranswer.service.serviceImpl.KeycloakServiceImpl;
+import com.t3q.dranswer.service.KeycloakServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
