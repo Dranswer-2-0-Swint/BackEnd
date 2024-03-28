@@ -3,30 +3,21 @@ package com.t3q.dranswer.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.t3q.dranswer.dto.keycloak.KeycloakTokenIntrospectReq;
-import com.t3q.dranswer.service.KeycloakService;
+import com.t3q.dranswer.service.serviceImpl.KeycloakServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.test.web.servlet.MockMvc;
 
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest
 class KeycloakControllerTest {
@@ -35,7 +26,7 @@ class KeycloakControllerTest {
     private WebTestClient webTestClient;
 
     @MockBean
-    private KeycloakService keycloakService;
+    private KeycloakServiceImpl keycloakServiceImpl;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -53,7 +44,7 @@ class KeycloakControllerTest {
         JsonNode jsonNodeMock = objectMapper.createObjectNode().put("active", true);
         Mono<JsonNode> jsonNodeMono = Mono.just(jsonNodeMock);
 
-        given(keycloakService.postkeycloakIntrospect(tokenReq)).willReturn(jsonNodeMono);
+        given(keycloakServiceImpl.postkeycloakIntrospect(tokenReq)).willReturn(jsonNodeMono);
 
 
         webTestClient.post().uri("/api/v1/auth/introspectToken")

@@ -7,7 +7,8 @@ import com.t3q.dranswer.dto.keycloak.KeycloakTokenReq;
 import com.t3q.dranswer.dto.keycloak.KeycloakTokenRes;
 import com.t3q.dranswer.exception.errorCode.CommonErrorCode;
 import com.t3q.dranswer.exception.exception.RestApiException;
-import com.t3q.dranswer.service.KeycloakService;
+import com.t3q.dranswer.service.service.KeycloakService;
+import com.t3q.dranswer.service.serviceImpl.KeycloakServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -21,7 +22,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 
 
@@ -32,7 +32,7 @@ import reactor.core.publisher.Mono;
 public class KeycloakController {
 
     @Autowired
-    KeycloakService keycloakService;
+    KeycloakServiceImpl keycloakServiceImpl;
     private final Logger log = LoggerFactory.getLogger(KeycloakController.class);
 
     @PostMapping( "/postToken")
@@ -46,7 +46,7 @@ public class KeycloakController {
     @ApiResponse(responseCode = "401", description = "incorrect user or client info")
     public Mono<KeycloakTokenRes> postToken(HttpServletRequest request, @RequestBody @Valid KeycloakTokenReq keycloakTokenReq) {
         log.info("getToken API called");
-        Mono<KeycloakTokenRes> res = keycloakService.postkeycloakToken(keycloakTokenReq);
+        Mono<KeycloakTokenRes> res = keycloakServiceImpl.postkeycloakToken(keycloakTokenReq);
         return res;
     }
 
@@ -61,10 +61,9 @@ public class KeycloakController {
     @ApiResponse(responseCode = "401", description = "incorrect user or client info")
     public Mono<JsonNode> postTokenIntrospect(HttpServletRequest request, @RequestBody KeycloakTokenIntrospectReq token) {
         log.info("introspect api called");
-        Mono<JsonNode> res = keycloakService.postkeycloakIntrospect(token);
+        Mono<JsonNode> res = keycloakServiceImpl.postkeycloakIntrospect(token);
         return res;
     }
-
 
     @CustomVerifyToken
     @GetMapping("/test")
@@ -72,8 +71,6 @@ public class KeycloakController {
         log.info("\n========================\n=       test called      =\n=========================");
         throw new RestApiException(CommonErrorCode.BAD_REQUEST);
     }
-
-
 
 
 }

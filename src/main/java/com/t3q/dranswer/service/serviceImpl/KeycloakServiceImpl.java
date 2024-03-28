@@ -1,10 +1,11 @@
-package com.t3q.dranswer.service;
+package com.t3q.dranswer.service.serviceImpl;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.t3q.dranswer.dto.keycloak.KeycloakTokenIntrospectReq;
 import com.t3q.dranswer.dto.keycloak.KeycloakTokenReq;
 import com.t3q.dranswer.dto.keycloak.KeycloakTokenRes;
 
+import com.t3q.dranswer.service.service.KeycloakService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 @Service
-public class KeycloakService {
+public class KeycloakServiceImpl implements KeycloakService {
 
     private final WebClient webClient;
 
@@ -36,11 +37,13 @@ public class KeycloakService {
     private String grantType = "password";
 
 
-    public KeycloakService(WebClient.Builder webClientBuilder) {
+    public KeycloakServiceImpl(WebClient.Builder webClientBuilder) {
         this.webClient = webClientBuilder.baseUrl("https://auth-dev.dranswer-g.co.kr").build();
     }
 
-    public Mono<KeycloakTokenRes> postkeycloakToken (KeycloakTokenReq keycloakTokenReq){
+
+    @Override
+    public Mono<KeycloakTokenRes> postkeycloakToken(KeycloakTokenReq keycloakTokenReq){
 
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("client_id", keycloakTokenReq.getClient_id());
@@ -59,6 +62,7 @@ public class KeycloakService {
     }
 
 
+    @Override
     public Mono<JsonNode> postkeycloakIntrospect(KeycloakTokenIntrospectReq token) {
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
 
@@ -74,4 +78,5 @@ public class KeycloakService {
                 .retrieve()
                 .bodyToMono(JsonNode.class);
     }
+
 }
