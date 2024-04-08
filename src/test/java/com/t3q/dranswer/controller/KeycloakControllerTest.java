@@ -3,7 +3,7 @@ package com.t3q.dranswer.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.t3q.dranswer.dto.keycloak.KeycloakTokenIntrospectReq;
-import com.t3q.dranswer.service.KeycloakServiceImpl;
+import com.t3q.dranswer.service.KeycloakService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ class KeycloakControllerTest {
     private WebTestClient webTestClient;
 
     @MockBean
-    private KeycloakServiceImpl keycloakServiceImpl;
+    private KeycloakService keycloakService;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -44,7 +44,7 @@ class KeycloakControllerTest {
         JsonNode jsonNodeMock = objectMapper.createObjectNode().put("active", true);
         Mono<JsonNode> jsonNodeMono = Mono.just(jsonNodeMock);
 
-        given(keycloakServiceImpl.postkeycloakIntrospect(tokenReq)).willReturn(jsonNodeMono);
+        given(keycloakService.postkeycloakIntrospect(tokenReq)).willReturn(jsonNodeMono);
 
 
         webTestClient.post().uri("/api/v1/auth/introspectToken")

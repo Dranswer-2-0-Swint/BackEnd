@@ -6,10 +6,11 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Schema(description = "keycloak 사용자 정보")
-@AllArgsConstructor
+@NoArgsConstructor
 public class KeycloakTokenReq {
 
     @NotBlank(message = "클라이언트 이름을 입력해주세요.")

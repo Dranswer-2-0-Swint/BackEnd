@@ -2,8 +2,10 @@ package com.t3q.dranswer.dto.keycloak;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class KeycloakTokenRes {
     @JsonProperty("access_token")
     private String access_token;

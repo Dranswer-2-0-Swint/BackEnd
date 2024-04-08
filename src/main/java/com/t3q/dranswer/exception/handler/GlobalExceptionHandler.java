@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.validation.BindException;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.List;
@@ -30,13 +29,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
 
-    //Webclient API 요청 실패 예외
-    @ExceptionHandler(WebClientResponseException.class)
-    public ResponseEntity<Object> handleWebClientResponseException(WebClientResponseException e) {
-        log.error("Error from WebClient - Status {}, Body {}", e.getRawStatusCode(),
-                e.getResponseBodyAsString(), e);
-        return handleExceptionInternal(CommonErrorCode.INTERNAL_SERVER_ERROR,e.getMessage());
-    }
 
 
     // RuntimeException 처리
@@ -86,6 +78,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     private ResponseEntity<Object> handleExceptionInternal(ErrorCode errorCode, String message) {
+
+
         return ResponseEntity.status(errorCode.getHttpStatus())
                 .body(makeErrorResponse(errorCode, message));
     }

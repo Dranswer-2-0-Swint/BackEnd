@@ -7,7 +7,7 @@ import com.t3q.dranswer.dto.keycloak.KeycloakTokenReq;
 import com.t3q.dranswer.dto.keycloak.KeycloakTokenRes;
 import com.t3q.dranswer.exception.errorCode.CommonErrorCode;
 import com.t3q.dranswer.exception.exception.RestApiException;
-import com.t3q.dranswer.service.KeycloakServiceImpl;
+import com.t3q.dranswer.service.KeycloakService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -31,7 +31,7 @@ import reactor.core.publisher.Mono;
 public class KeycloakController {
 
     @Autowired
-    KeycloakServiceImpl keycloakServiceImpl;
+    private final KeycloakService keycloakService;
     private final Logger log = LoggerFactory.getLogger(KeycloakController.class);
 
     @PostMapping( "/postToken")
@@ -43,26 +43,25 @@ public class KeycloakController {
             content = {@Content(mediaType = "application/json",
                     schema = @Schema(implementation = KeycloakTokenRes.class))})
     @ApiResponse(responseCode = "401", description = "incorrect user or client info")
-    public Mono<KeycloakTokenRes> postToken(HttpServletRequest request, @RequestBody @Valid KeycloakTokenReq keycloakTokenReq) {
-        log.info("getToken API called");
-        Mono<KeycloakTokenRes> res = keycloakServiceImpl.postkeycloakToken(keycloakTokenReq);
+    public ResponseEntity<String> postToken(HttpServletRequest request, @RequestBody @Valid KeycloakTokenReq keycloakTokenReq) {
+        ResponseEntity<String> res = keycloakService.postkeycloakToken(keycloakTokenReq);
         return res;
     }
 
-    @PostMapping("/introspectToken")
-    @Operation(
-            summary="keycloak token introspect api",
-            description="access_token 유효성 검증 및 parsing 한 결과를 return 해주는 api"
-    )
-    @ApiResponse(responseCode = "200", description = "ok",
-            content = {@Content(mediaType = "application/json",
-                    schema = @Schema(implementation = String.class))})
-    @ApiResponse(responseCode = "401", description = "incorrect user or client info")
-    public Mono<JsonNode> postTokenIntrospect(HttpServletRequest request, @RequestBody KeycloakTokenIntrospectReq token) {
-        log.info("introspect api called");
-        Mono<JsonNode> res = keycloakServiceImpl.postkeycloakIntrospect(token);
-        return res;
-    }
+//    @PostMapping("/introspectToken")
+//    @Operation(
+//            summary="keycloak token introspect api",
+//            description="access_token 유효성 검증 및 parsing 한 결과를 return 해주는 api"
+//    )
+//    @ApiResponse(responseCode = "200", description = "ok",
+//            content = {@Content(mediaType = "application/json",
+//                    schema = @Schema(implementation = String.class))})
+//    @ApiResponse(responseCode = "401", description = "incorrect user or client info")
+//    public Mono<JsonNode> postTokenIntrospect(HttpServletRequest request, @RequestBody KeycloakTokenIntrospectReq token) {
+//        log.info("introspect api called");
+//        Mono<JsonNode> res = keycloakService.postkeycloakIntrospect(token);
+//        return res;
+//    }
 
     @CustomVerifyToken
     @GetMapping("/test")
