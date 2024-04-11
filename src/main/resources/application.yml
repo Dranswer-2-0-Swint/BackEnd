@@ -63,9 +63,9 @@ env:
   userRealm: ${USER_REALM:service-user-dev}
   userClient: ${USER_CLIENT:swint}
   userSecret: ${USER_SECRET:Vvw2Obuuqa4nlAz5cctSBK5kb1jONReP}
-  userAuthUrl: ${env.authUrl}/realms/${env.userRealm}/protocol/openid-connect
-  userTokenUrl: ${env.authUrl}/realms/${env.userRealm}/protocol/openid-connect/token
-  userSpecUrl: ${env.authUrl}/realms/${env.userRealm}/protocol/openid-connect/token/introspect
+  userAuthUrl: /realms/${env.userRealm}/protocol/openid-connect
+  userTokenUrl: /realms/${env.userRealm}/protocol/openid-connect/token
+  userSpecUrl: /realms/${env.userRealm}/protocol/openid-connect/token/introspect
 
   systemRealm: ${SYSTEM_REALM:service-system-dev}
   systemClient: ${SYSTEM_CLIENT:swint}

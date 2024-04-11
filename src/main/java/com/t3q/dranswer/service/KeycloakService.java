@@ -1,9 +1,9 @@
 package com.t3q.dranswer.service;
 
+import com.t3q.dranswer.common.ApplicationProperties;
 import com.t3q.dranswer.dto.keycloak.KeycloakTokenReq;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -18,32 +18,21 @@ import org.springframework.web.client.RestClient;
 @Service
 public class KeycloakService {
 
-    @Autowired
     private final RestClient keycloakClient;
 
-
-    @Value("${env.userClient}")
-    private String clientId;
-
-    @Value("${env.userSecret}")
-    private String clientSecret;
-
-    @Value("${env.authUrl}")
-    private String host;
-
-    @Value("${env.userRealm}")
-    private String userRealm;
+    private final ApplicationProperties applicationProperties;
 
     private String tokenTypeHint = "access_token";
-
     private String grantType = "password";
 
-    public KeycloakService(@Qualifier("keycloakClient") RestClient keycloakClient) {
+    public KeycloakService(@Qualifier("keycloakClient") RestClient keycloakClient, ApplicationProperties applicationProperties) {
         this.keycloakClient = keycloakClient;
+        this.applicationProperties = applicationProperties;
     }
 
 
     public ResponseEntity<String> postkeycloakToken(KeycloakTokenReq keycloakTokenReq){
+        String tokenURI = applicationProperties.getUserTokenUrl();
 
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("client_id", keycloakTokenReq.getClient_id());
@@ -53,7 +42,7 @@ public class KeycloakService {
         body.add("username", keycloakTokenReq.getUsername());
 
         ResponseEntity<String> result = keycloakClient.post()
-                .uri("/realms/service-user-dev/protocol/openid-connect/token")
+                .uri(tokenURI)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(body)
                 .retrieve().toEntity(String.class);

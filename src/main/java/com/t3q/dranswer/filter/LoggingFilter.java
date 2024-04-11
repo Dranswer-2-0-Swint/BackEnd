@@ -58,16 +58,17 @@ public class LoggingFilter extends OncePerRequestFilter  {
             //요청과 응답을 담아 두는 Wrapper
             ContentCachingRequestWrapper requestWrapper = new ContentCachingRequestWrapper(request);
             ContentCachingResponseWrapper responseWrapper = new ContentCachingResponseWrapper(response);
+
+
             // 실제 필터 체인 실행
             filterChain.doFilter(requestWrapper, responseWrapper);
-
 
 
             //db에 저장하는 메서드
             saveLog(requestWrapper,responseWrapper);
             //wrapper -> 실제 response
             responseWrapper.copyBodyToResponse();
-            
+
 
             logTrace.end(status);
 
@@ -105,7 +106,6 @@ public class LoggingFilter extends OncePerRequestFilter  {
         logEntity.setReq_dt(LocalDateTime.now());
         logEntity.setReq_uri(requestWrapper.getRequestURI());
         logEntity.setReq_md(requestWrapper.getMethod());
-        //loggingRepository.save(logEntity);
 
         logEntity.setReq_user("신창민로컬필터");
         logEntity.setReq_body(requestBody);

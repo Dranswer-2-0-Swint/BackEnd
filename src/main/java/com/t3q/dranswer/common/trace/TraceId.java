@@ -18,7 +18,7 @@ public class TraceId {
     }
 
     private String createId() {
-        return String.format("[Anonymous: %S]",UUID.randomUUID().toString().substring(0,8));
+        return String.format("%S",UUID.randomUUID().toString().substring(0,8));
     }
 
     public TraceId createNextId(){

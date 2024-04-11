@@ -1,11 +1,11 @@
 package com.t3q.dranswer.config.restclient;
 
+import com.t3q.dranswer.common.ApplicationProperties;
 import com.t3q.dranswer.interceptor.LoggingInterceptor;
 import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.BufferingClientHttpRequestFactory;
@@ -17,9 +17,10 @@ import java.util.concurrent.TimeUnit;
 
 
 @Configuration
-public class RestClientConfig {
-    @Autowired
+public class KeycloakRestClientConfig {
     private final LoggingInterceptor loggingInterceptor;
+
+    private final ApplicationProperties applicationProperties;
 
     @Bean
     ClientHttpRequestFactory clientHttpRequestFactory() {
@@ -36,14 +37,17 @@ public class RestClientConfig {
 
         return new HttpComponentsClientHttpRequestFactory(httpClient);
     }
-    private String host = "https://auth-dev.dranswer-g.co.kr";
 
-    public RestClientConfig(LoggingInterceptor loggingInterceptor) {
+
+
+    public KeycloakRestClientConfig(LoggingInterceptor loggingInterceptor, ApplicationProperties applicationProperties) {
         this.loggingInterceptor = loggingInterceptor;
+        this.applicationProperties = applicationProperties;
     }
 
     @Bean("keycloakClient")
     public RestClient keycloakClient(ClientHttpRequestFactory clientHttpRequestFactory) {
+        String host = applicationProperties.getAuthUrl();
         return RestClient.builder()
                 .baseUrl(host)
                 .requestInterceptor(loggingInterceptor)

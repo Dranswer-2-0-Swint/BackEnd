@@ -30,7 +30,6 @@ import reactor.core.publisher.Mono;
 @Tag(name = "Keycloak Controller", description = "인증서버 연동 API")
 public class KeycloakController {
 
-    @Autowired
     private final KeycloakService keycloakService;
     private final Logger log = LoggerFactory.getLogger(KeycloakController.class);
 
